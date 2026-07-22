@@ -168,7 +168,7 @@ textarea {
 .success-state {
   display: grid;
   justify-items: start;
-  gap: 10px;
+  gap: 14px;
   padding: 20px 0 6px;
 }
 
@@ -197,6 +197,65 @@ textarea {
   margin: 0;
   color: var(--muted);
   line-height: 1.6;
+}
+
+.contact-card {
+  width: 100%;
+  margin: 8px 0 6px;
+  padding: 20px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.contact-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.contact-info {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.email-contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 10px 16px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 180ms ease;
+}
+
+.email-contact-link:hover {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+}
+
+.email-arrow {
+  transition: transform 180ms ease;
+}
+
+.email-contact-link:hover .email-arrow {
+  transform: translateX(3px);
 }
 
 @media (max-width: 640px) {
