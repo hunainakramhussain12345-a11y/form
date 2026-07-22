@@ -18,13 +18,17 @@ CREATE TABLE IF NOT EXISTS public.sales_applications (
   expected_compensation text NOT NULL,
   availability text NOT NULL,
   resume_file_name text,
+  resume_url text,
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
--- 3. Enable Row Level Security
+-- 3. Add resume_url column if missing from existing table
+ALTER TABLE public.sales_applications ADD COLUMN IF NOT EXISTS resume_url text;
+
+-- 4. Enable Row Level Security on table
 ALTER TABLE public.sales_applications ENABLE ROW LEVEL SECURITY;
 
--- 4. Re-create RLS Policies cleanly
+-- 5. Re-create RLS Policies cleanly
 DROP POLICY IF EXISTS "Allow anon inserts with basic validation" ON public.sales_applications;
 DROP POLICY IF EXISTS "Allow anon inserts" ON public.sales_applications;
 
@@ -41,3 +45,16 @@ CREATE POLICY "Allow anon reads for testing" ON public.sales_applications
   FOR SELECT
   TO anon
   USING (true);
+
+-- 6. Storage Bucket for PDF CVs
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES ('resumes', 'resumes', true, 10485760, ARRAY['application/pdf'])
+ON CONFLICT (id) DO UPDATE SET public = true;
+
+DROP POLICY IF EXISTS "Allow anon upload resumes" ON storage.objects;
+CREATE POLICY "Allow anon upload resumes" ON storage.objects
+  FOR INSERT TO anon WITH CHECK (bucket_id = 'resumes');
+
+DROP POLICY IF EXISTS "Allow public read resumes" ON storage.objects;
+CREATE POLICY "Allow public read resumes" ON storage.objects
+  FOR SELECT TO anon USING (bucket_id = 'resumes');

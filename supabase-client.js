@@ -15,6 +15,7 @@
       supabaseUrl,
       supabaseAnonKey,
       tableName: 'sales_applications',
+      bucketName: 'resumes',
     };
   }
 
@@ -36,6 +37,58 @@
       method: 'POST',
       body: JSON.stringify(payload),
     };
+  }
+
+  async function uploadResumeToSupabase(config, file, fetchImpl = fetch) {
+    if (!file) return null;
+    const { supabaseUrl, supabaseAnonKey, bucketName } = normalizeSupabaseConfig(config);
+
+    if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('YOUR_PROJECT_REF') || supabaseAnonKey.includes('YOUR_')) {
+      throw new Error('Replace the placeholder Supabase values in config.js before uploading.');
+    }
+
+    const timestamp = Date.now();
+    const fileName = typeof file === 'string' ? 'resume.pdf' : (file.name || 'resume.pdf');
+    const sanitizedName = fileName.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+    const storagePath = `${timestamp}_${sanitizedName}`;
+    const uploadUrl = `${supabaseUrl}/storage/v1/object/${bucketName}/${storagePath}`;
+
+    const headers = {
+      apikey: supabaseAnonKey,
+      Authorization: `Bearer ${supabaseAnonKey}`,
+      'x-upsert': 'true',
+    };
+
+    if (typeof file !== 'string' && file.type) {
+      headers['Content-Type'] = file.type;
+    } else {
+      headers['Content-Type'] = 'application/pdf';
+    }
+
+    const response = await fetchImpl(uploadUrl, {
+      method: 'POST',
+      headers,
+      body: file,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      let friendlyMessage = errorText || 'Failed to upload resume to storage bucket.';
+
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed?.message) {
+          friendlyMessage = parsed.message;
+        }
+      } catch {
+        // Keep original error text if not JSON
+      }
+
+      throw new Error(`Resume Storage Upload Error: ${friendlyMessage}`);
+    }
+
+    // Public download/view URL from Supabase Storage
+    return `${supabaseUrl}/storage/v1/object/public/${bucketName}/${storagePath}`;
   }
 
   async function submitToSupabase(config, payload, fetchImpl = fetch) {
@@ -70,6 +123,7 @@
   return {
     normalizeSupabaseConfig,
     createSupabaseRequestOptions,
+    uploadResumeToSupabase,
     submitToSupabase,
   };
 });

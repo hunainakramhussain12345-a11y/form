@@ -114,6 +114,9 @@
       window.submitToSupabaseHelper = function submitToSupabaseHelper(config, payload) {
         return window.SUPABASE_CLIENT.submitToSupabase(config, payload);
       };
+      window.uploadResumeHelper = function uploadResumeHelper(config, file) {
+        return window.SUPABASE_CLIENT.uploadResumeToSupabase(config, file);
+      };
     </script>
     <script src="./app.js"></script>
   </body>

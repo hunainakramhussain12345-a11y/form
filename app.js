@@ -89,7 +89,17 @@ form.addEventListener('submit', async (event) => {
     return;
   }
 
+  const resumeFile = document.getElementById('resume').files[0];
+
   try {
+    if (resumeFile) {
+      showBanner('Uploading resume PDF...', 'info');
+      const config = getSupabaseConfig();
+      const resumeUrl = await window.uploadResumeHelper(config, resumeFile);
+      payload.resume_url = resumeUrl;
+    }
+
+    showBanner('Submitting application...', 'info');
     await submitToSupabase(payload);
     form.classList.add('hidden');
     form.style.display = 'none';
