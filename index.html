@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alpha Orbit | Sales & Business Development Application</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="card" aria-labelledby="form-title">
+        <header class="hero">
+          <p class="eyebrow">Alpha Orbit Careers</p>
+          <h1 id="form-title">Sales & Business Development Application</h1>
+          <p class="intro">
+            Help ambitious companies grow with thoughtful, high-velocity revenue strategy.
+          </p>
+        </header>
+
+        <div id="status-banner" class="status-banner" aria-live="polite"></div>
+
+        <form id="application-form" novalidate>
+          <div class="field-group">
+            <label for="fullName">Full Name</label>
+            <input id="fullName" name="fullName" type="text" required maxlength="100" />
+          </div>
+
+          <div class="field-group">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required maxlength="150" />
+          </div>
+
+          <div class="field-group">
+            <label for="phone">Phone Number</label>
+            <input id="phone" name="phone" type="tel" required maxlength="30" />
+          </div>
+
+          <div class="field-group">
+            <label for="linkedinUrl">LinkedIn Profile URL</label>
+            <input id="linkedinUrl" name="linkedinUrl" type="url" required maxlength="250" placeholder="https://www.linkedin.com/in/yourname" />
+          </div>
+
+          <div class="field-group">
+            <label for="currentRole">Current / Last Role &amp; Company</label>
+            <input id="currentRole" name="currentRole" type="text" required maxlength="150" />
+          </div>
+
+          <div class="field-group">
+            <label for="yearsOfExperience">Years of Sales Experience</label>
+            <select id="yearsOfExperience" name="yearsOfExperience" required>
+              <option value="">Select one</option>
+              <option value="0-1">0-1</option>
+              <option value="1-3">1-3</option>
+              <option value="3-5">3-5</option>
+              <option value="5+">5+</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="relevantExperience">Relevant Experience</label>
+            <select id="relevantExperience" name="relevantExperience" required>
+              <option value="">Select one</option>
+              <option value="Agency">Agency</option>
+              <option value="Startup">Startup</option>
+              <option value="B2B Sales">B2B Sales</option>
+              <option value="Multi-context">Multi-context</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="whyFit">Why are you a good fit for Alpha Orbit?</label>
+            <textarea id="whyFit" name="whyFit" rows="5" maxlength="500" required></textarea>
+            <p class="hint" id="whyFitCounter">0 / 500</p>
+          </div>
+
+          <div class="field-group">
+            <label for="compensation">Expected Compensation Structure</label>
+            <input id="compensation" name="compensation" type="text" maxlength="150" />
+          </div>
+
+          <div class="field-group">
+            <label for="availability">Availability</label>
+            <select id="availability" name="availability" required>
+              <option value="">Select one</option>
+              <option value="Immediate">Immediate</option>
+              <option value="2 weeks">2 weeks</option>
+              <option value="1 month+">1 month+</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="resume">Resume / CV Upload (optional, PDF only)</label>
+            <input id="resume" name="resume" type="file" accept="application/pdf" />
+            <p class="hint">PDF files only. Optional but recommended.</p>
+          </div>
+
+          <button class="submit-button" type="submit">Submit Application</button>
+        </form>
+
+        <section id="success-state" class="success-state hidden" aria-live="polite">
+          <div class="success-icon">✓</div>
+          <h2>Application received</h2>
+          <p>
+            Thank you for applying. We’ll review your details and reach out if your background is a fit.
+          </p>
+          <button type="button" class="secondary-button" id="reset-button">Apply again</button>
+        </section>
+      </section>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./supabase-client.js"></script>
+    <script>
+      window.submitToSupabaseHelper = function submitToSupabaseHelper(config, payload) {
+        return window.SUPABASE_CLIENT.submitToSupabase(config, payload);
+      };
+    </script>
+    <script src="./app.js"></script>
+  </body>
+</html>
