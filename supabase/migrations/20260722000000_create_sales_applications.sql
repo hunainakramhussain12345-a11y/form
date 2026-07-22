@@ -55,6 +55,5 @@ DROP POLICY IF EXISTS "Allow anon upload resumes" ON storage.objects;
 CREATE POLICY "Allow anon upload resumes" ON storage.objects
   FOR INSERT TO anon WITH CHECK (bucket_id = 'resumes');
 
+-- FIX LINT 0025: Drop broad SELECT policy on storage.objects to prevent listing all files in the bucket
 DROP POLICY IF EXISTS "Allow public read resumes" ON storage.objects;
-CREATE POLICY "Allow public read resumes" ON storage.objects
-  FOR SELECT TO anon USING (bucket_id = 'resumes');
