@@ -1,10 +1,10 @@
--- Consolidated migration for Alpha Orbit Careers Form
--- File: supabase/migrations/20260722000000_create_sales_applications.sql
+-- Supabase Migration: 20260722000000_create_sales_applications.sql
+-- Create public.sales_applications table and RLS policies for Alpha Orbit Careers Form
 
-BEGIN;
-
+-- 1. Ensure pgcrypto extension for gen_random_uuid()
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
+-- 2. Create table public.sales_applications
 CREATE TABLE IF NOT EXISTS public.sales_applications (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   full_name text NOT NULL,
@@ -21,18 +21,10 @@ CREATE TABLE IF NOT EXISTS public.sales_applications (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
-ALTER TABLE public.sales_applications ADD COLUMN IF NOT EXISTS phone_number text;
-ALTER TABLE public.sales_applications ADD COLUMN IF NOT EXISTS linkedin_url text;
-ALTER TABLE public.sales_applications ADD COLUMN IF NOT EXISTS current_role_company text;
-ALTER TABLE public.sales_applications ADD COLUMN IF NOT EXISTS years_of_sales_experience text;
-ALTER TABLE public.sales_applications ADD COLUMN IF NOT EXISTS relevant_experience text;
-ALTER TABLE public.sales_applications ADD COLUMN IF NOT EXISTS why_fit text;
-ALTER TABLE public.sales_applications ADD COLUMN IF NOT EXISTS expected_compensation text;
-ALTER TABLE public.sales_applications ADD COLUMN IF NOT EXISTS availability text;
-ALTER TABLE public.sales_applications ADD COLUMN IF NOT EXISTS resume_file_name text;
-
+-- 3. Enable Row Level Security
 ALTER TABLE public.sales_applications ENABLE ROW LEVEL SECURITY;
 
+-- 4. Re-create RLS Policies cleanly
 DROP POLICY IF EXISTS "Allow anon inserts with basic validation" ON public.sales_applications;
 DROP POLICY IF EXISTS "Allow anon inserts" ON public.sales_applications;
 
@@ -49,5 +41,3 @@ CREATE POLICY "Allow anon reads for testing" ON public.sales_applications
   FOR SELECT
   TO anon
   USING (true);
-
-COMMIT;
