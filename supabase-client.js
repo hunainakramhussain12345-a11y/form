@@ -41,6 +41,20 @@
 
   async function uploadResumeToSupabase(config, file, fetchImpl = fetch) {
     if (!file) return null;
+
+    // Frontend & Client-side enforcement: 3MB limit & PDF check
+    const MAX_FILE_SIZE_BYTES = 3 * 1024 * 1024; // 3MB limit
+
+    if (typeof file !== 'string' && file.size && file.size > MAX_FILE_SIZE_BYTES) {
+      throw new Error('Resume file size must not exceed 3MB.');
+    }
+
+    const fileName = typeof file === 'string' ? 'resume.pdf' : (file.name || 'resume.pdf');
+    const isPdf = (typeof file !== 'string' && file.type === 'application/pdf') || fileName.toLowerCase().endsWith('.pdf');
+    if (!isPdf) {
+      throw new Error('Resume upload must be a PDF file.');
+    }
+
     const { supabaseUrl, supabaseAnonKey, bucketName } = normalizeSupabaseConfig(config);
 
     if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('YOUR_PROJECT_REF') || supabaseAnonKey.includes('YOUR_')) {
@@ -48,7 +62,6 @@
     }
 
     const timestamp = Date.now();
-    const fileName = typeof file === 'string' ? 'resume.pdf' : (file.name || 'resume.pdf');
     const sanitizedName = fileName.replace(/[^a-zA-Z0-9.\-_]/g, '_');
     const storagePath = `${timestamp}_${sanitizedName}`;
     const uploadUrl = `${supabaseUrl}/storage/v1/object/${bucketName}/${storagePath}`;
@@ -57,13 +70,8 @@
       apikey: supabaseAnonKey,
       Authorization: `Bearer ${supabaseAnonKey}`,
       'x-upsert': 'true',
+      'Content-Type': 'application/pdf',
     };
-
-    if (typeof file !== 'string' && file.type) {
-      headers['Content-Type'] = file.type;
-    } else {
-      headers['Content-Type'] = 'application/pdf';
-    }
 
     const response = await fetchImpl(uploadUrl, {
       method: 'POST',
