@@ -277,12 +277,12 @@ function validateFullForm(payload) {
     }
   }
 
-  // RESUME CV FRONTEND VALIDATION (PDF only, max 3MB)
+  // RESUME CV FRONTEND VALIDATION (PDF only, max 5MB)
   const resumeFile = resumeInput.files[0];
   if (resumeFile) {
-    const maxSizeBytes = 3 * 1024 * 1024; // 3MB limit
+    const maxSizeBytes = 5 * 1024 * 1024; // 5MB limit
     if (resumeFile.size > maxSizeBytes) {
-      return 'Resume file size must not exceed 3MB.';
+      return 'Resume file size must not exceed 5MB.';
     }
 
     const isPdfType = resumeFile.type === 'application/pdf' || resumeFile.name.toLowerCase().endsWith('.pdf');
@@ -318,9 +318,9 @@ if (privacyCheckbox) {
 resumeInput.addEventListener('change', () => {
   const file = resumeInput.files[0];
   if (file) {
-    if (file.size > 3 * 1024 * 1024) {
-      showBanner('Resume file size must not exceed 3MB.', 'error');
-      fileLabelText.textContent = `${file.name} (Too large - Max 3MB)`;
+    if (file.size > 5 * 1024 * 1024) {
+      showBanner('Resume file size must not exceed 5MB.', 'error');
+      fileLabelText.textContent = `${file.name} (Too large - Max 5MB)`;
       fileLabelText.style.color = '#FCA5A5';
       return;
     }

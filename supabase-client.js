@@ -42,11 +42,11 @@
   async function uploadResumeToSupabase(config, file, fetchImpl = fetch) {
     if (!file) return null;
 
-    // Frontend & Client-side enforcement: 3MB limit & PDF check
-    const MAX_FILE_SIZE_BYTES = 3 * 1024 * 1024; // 3MB limit
+    // Frontend & Client-side enforcement: 5MB limit & PDF check
+    const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB limit
 
     if (typeof file !== 'string' && file.size && file.size > MAX_FILE_SIZE_BYTES) {
-      throw new Error('Resume file size must not exceed 3MB.');
+      throw new Error('Resume file size must not exceed 5MB.');
     }
 
     const fileName = typeof file === 'string' ? 'resume.pdf' : (file.name || 'resume.pdf');

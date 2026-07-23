@@ -82,16 +82,16 @@ test('allows submission with empty/null portfolio_url for non-sales roles when p
   assert.equal(body.portfolio_url, null);
 });
 
-test('enforces 3MB max file size limit for resume upload', async () => {
+test('enforces 5MB max file size limit for resume upload', async () => {
   const overizedFile = {
     name: 'large_cv.pdf',
     type: 'application/pdf',
-    size: 4 * 1024 * 1024, // 4MB
+    size: 6 * 1024 * 1024, // 6MB
   };
 
   await assert.rejects(
     () => uploadResumeToSupabase({ supabaseUrl: 'https://abc123.supabase.co', supabaseAnonKey: 'anon-key-123' }, overizedFile),
-    /Resume file size must not exceed 3MB/i,
+    /Resume file size must not exceed 5MB/i,
   );
 });
 
@@ -108,7 +108,7 @@ test('enforces PDF mime/type extension for resume upload', async () => {
   );
 });
 
-test('successfully uploads valid PDF under 3MB to resumes bucket', async () => {
+test('successfully uploads valid PDF under 5MB to resumes bucket', async () => {
   let uploadUrlTarget;
   const mockFetch = async (url, options) => {
     uploadUrlTarget = url;
@@ -118,7 +118,7 @@ test('successfully uploads valid PDF under 3MB to resumes bucket', async () => {
   const validFile = {
     name: 'john_doe_resume.pdf',
     type: 'application/pdf',
-    size: 1.5 * 1024 * 1024, // 1.5MB
+    size: 4.5 * 1024 * 1024, // 4.5MB
   };
 
   const publicUrl = await uploadResumeToSupabase(
