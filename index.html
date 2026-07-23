@@ -15,7 +15,29 @@
       <div class="split-container">
         <!-- LEFT PANEL: Branding & Value Points -->
         <aside class="brand-panel">
-          <div class="brand-glow-bg"></div>
+          <!-- Background Orbital Swoosh Overlay -->
+          <div class="orbital-swoosh">
+            <svg viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="250" cy="250" rx="230" ry="110" transform="rotate(-28 250 250)" stroke="url(#gold-swoosh-grad)" stroke-width="2.5" opacity="0.75" />
+              <ellipse cx="250" cy="250" rx="260" ry="140" transform="rotate(-28 250 250)" stroke="url(#gold-swoosh-grad-2)" stroke-width="1.2" opacity="0.35" />
+              <circle cx="390" cy="160" r="3" fill="#FACC15" />
+              <circle cx="120" cy="340" r="2.5" fill="#F59E0B" />
+              <circle cx="300" cy="390" r="2" fill="#FBBF24" />
+              <defs>
+                <linearGradient id="gold-swoosh-grad" x1="0" y1="0" x2="500" y2="500" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#FACC15" stop-opacity="0" />
+                  <stop offset="0.4" stop-color="#F59E0B" />
+                  <stop offset="0.7" stop-color="#FBBF24" />
+                  <stop offset="1" stop-color="#CA8A04" stop-opacity="0" />
+                </linearGradient>
+                <linearGradient id="gold-swoosh-grad-2" x1="0" y1="0" x2="500" y2="500" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#FACC15" stop-opacity="0" />
+                  <stop offset="0.5" stop-color="#EAB308" />
+                  <stop offset="1" stop-color="#CA8A04" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
           
           <div class="brand-header">
             <div class="brand-logo">
@@ -417,33 +439,34 @@
 
           <!-- SUCCESS STATE SECTION -->
           <section id="success-state" class="success-state hidden" aria-live="polite">
-            <div class="success-glow-wrapper">
-              <div class="success-icon-ring">
-                <div class="success-icon">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <div class="success-card-split">
+              <div class="success-left-orb">
+                <div class="orb-ring-outer"></div>
+                <div class="orb-ring-inner"></div>
+                <div class="success-orb">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
                 </div>
               </div>
-              <div class="success-brand-logo">
-                <img src="./logo.png" alt="Alpha Orbit Digital Agency" style="max-width: 80px; height: auto;" />
+
+              <div class="success-right-content">
+                <span class="success-eyebrow">Application Submitted</span>
+                <h2 class="success-title">Thank you!</h2>
+                <p class="success-text">
+                  Your application has been submitted successfully.<br />
+                  Our team will review your application and get back to you soon.
+                </p>
+
+                <button type="button" class="btn btn-back-home" id="reset-button">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                  </svg>
+                  <span>Back to Home</span>
+                </button>
               </div>
             </div>
-
-            <span class="success-eyebrow">Application Submitted</span>
-            <h2 class="success-title">Thank you!</h2>
-            <p class="success-text">
-              Your application has been submitted successfully.<br />
-              Our team will review your application and get back to you soon.
-            </p>
-
-            <button type="button" class="btn btn-back-home" id="reset-button">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-              </svg>
-              <span>Back to Home</span>
-            </button>
           </section>
         </section>
       </div>
