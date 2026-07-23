@@ -1,8 +1,6 @@
 const form = document.getElementById('application-form');
 const successState = document.getElementById('success-state');
 const statusBanner = document.getElementById('status-banner');
-const whyFitInput = document.getElementById('whyFit');
-const whyFitCounter = document.getElementById('whyFitCounter');
 const resetButton = document.getElementById('reset-button');
 
 // Stepper elements
@@ -16,10 +14,11 @@ const prevStepBtn = document.getElementById('prev-step-btn');
 
 // Role elements
 const roleAppliedSelect = document.getElementById('roleApplied');
+const otherRoleInputGroup = document.getElementById('other-role-input-group');
+const roleOtherInput = document.getElementById('role_other');
 const rolePillTitle = document.getElementById('role-pill-title');
 const rolePillIcon = document.getElementById('role-pill-icon');
-const salesRoleFields = document.getElementById('sales-role-fields');
-const otherRoleFields = document.getElementById('other-role-fields');
+const roleFieldsContainer = document.getElementById('role-fields-container');
 
 // Resume elements
 const resumeInput = document.getElementById('resume');
@@ -43,6 +42,8 @@ function clearBanner() {
 }
 
 function updateCounter() {
+  const whyFitInput = document.getElementById('whyFit');
+  const whyFitCounter = document.getElementById('whyFitCounter');
   if (whyFitInput && whyFitCounter) {
     whyFitCounter.textContent = `${whyFitInput.value.length} / 500`;
   }
@@ -62,6 +63,7 @@ function validateLinkedIn(value) {
 }
 
 function validateUrl(value) {
+  if (!value) return true; // Optional URL
   try {
     const parsed = new URL(value.startsWith('http') ? value : `https://${value}`);
     return Boolean(parsed.hostname);
@@ -83,6 +85,8 @@ function getRoleIcon(role) {
       return '🎨';
     case 'WordPress':
       return '🌐';
+    case 'Other':
+      return '✨';
     case 'Full Stack':
     case 'Web Development':
     default:
@@ -90,18 +94,53 @@ function getRoleIcon(role) {
   }
 }
 
-// Update Role View based on selected role
+// Toggle "Other" role text input in Step 1
+function handleRoleSelectChange() {
+  const selectedRole = roleAppliedSelect.value;
+  if (selectedRole === 'Other') {
+    otherRoleInputGroup.classList.remove('hidden');
+    roleOtherInput.setAttribute('required', 'required');
+  } else {
+    otherRoleInputGroup.classList.add('hidden');
+    roleOtherInput.removeAttribute('required');
+    roleOtherInput.value = '';
+  }
+  syncRoleView();
+}
+
+// DYNAMIC DOM MOUNT / UNMOUNT: Ensures ONLY the selected role's fields exist in DOM
 function syncRoleView() {
   const selectedRole = roleAppliedSelect.value || 'Web Development';
-  rolePillTitle.textContent = selectedRole;
+  const roleOtherVal = roleOtherInput.value.trim();
+
+  if (selectedRole === 'Other' && roleOtherVal) {
+    rolePillTitle.textContent = `Other (${roleOtherVal})`;
+  } else {
+    rolePillTitle.textContent = selectedRole;
+  }
   rolePillIcon.textContent = getRoleIcon(selectedRole);
 
+  // Clear container completely to unmount any previous role fields
+  roleFieldsContainer.innerHTML = '';
+
   if (selectedRole === 'Sales & Business Development') {
-    salesRoleFields.classList.remove('hidden');
-    otherRoleFields.classList.add('hidden');
+    const tpl = document.getElementById('tpl-sales-fields');
+    if (tpl) {
+      const clone = tpl.content.cloneNode(true);
+      roleFieldsContainer.appendChild(clone);
+      const whyFitInput = document.getElementById('whyFit');
+      if (whyFitInput) {
+        whyFitInput.addEventListener('input', updateCounter);
+        updateCounter();
+      }
+    }
   } else {
-    salesRoleFields.classList.add('hidden');
-    otherRoleFields.classList.remove('hidden');
+    // All other roles including "Other" render general fields template ONLY
+    const tpl = document.getElementById('tpl-other-fields');
+    if (tpl) {
+      const clone = tpl.content.cloneNode(true);
+      roleFieldsContainer.appendChild(clone);
+    }
   }
 }
 
@@ -112,12 +151,14 @@ function validateStep1() {
   const phone = String(document.getElementById('phone').value || '').trim();
   const linkedinUrl = String(document.getElementById('linkedinUrl').value || '').trim();
   const roleApplied = String(roleAppliedSelect.value || '').trim();
+  const roleOtherText = String(roleOtherInput.value || '').trim();
 
   if (!fullName) return 'Please enter your full name.';
   if (!email || !validateEmail(email)) return 'Please enter a valid email address.';
   if (!phone) return 'Please enter your phone number.';
   if (!linkedinUrl || !validateLinkedIn(linkedinUrl)) return 'Please enter a valid LinkedIn profile URL.';
   if (!roleApplied) return 'Please select the role you are applying for.';
+  if (roleApplied === 'Other' && !roleOtherText) return 'Please specify your role name.';
 
   return null;
 }
@@ -151,6 +192,7 @@ function goToStep(step) {
 function collectFormData() {
   const formData = new FormData(form);
   const selectedRole = String(formData.get('roleApplied') || '').trim();
+  const roleOtherText = selectedRole === 'Other' ? String(formData.get('role_other') || '').trim() : null;
   const resumeFile = resumeInput.files[0];
 
   const basePayload = {
@@ -159,6 +201,7 @@ function collectFormData() {
     phone_number: String(formData.get('phone') || '').trim(),
     linkedin_url: String(formData.get('linkedinUrl') || '').trim(),
     role_applied_for: selectedRole,
+    role_other_text: roleOtherText,
     resume_file_name: resumeFile ? resumeFile.name : null,
   };
 
@@ -170,6 +213,10 @@ function collectFormData() {
       why_fit: String(formData.get('whyFit') || '').trim(),
       expected_compensation: String(formData.get('compensation') || '').trim(),
       availability: String(formData.get('availability') || '').trim(),
+      years_experience: null,
+      primary_skills: null,
+      project_description: null,
+      portfolio_url: null,
     };
   } else {
     return {
@@ -177,7 +224,12 @@ function collectFormData() {
       years_experience: String(formData.get('yearsExperience') || '').trim(),
       primary_skills: String(formData.get('primarySkills') || '').trim(),
       project_description: String(formData.get('projectDescription') || '').trim(),
-      portfolio_url: String(formData.get('portfolioUrl') || '').trim(),
+      portfolio_url: String(formData.get('portfolioUrl') || '').trim() || null,
+      years_of_sales_experience: null,
+      relevant_experience: null,
+      why_fit: null,
+      expected_compensation: null,
+      availability: null,
     };
   }
 }
@@ -199,7 +251,7 @@ function validateFullForm(payload) {
     if (!payload.years_experience) return 'Please provide your years of experience.';
     if (!payload.primary_skills) return 'Please enter your primary skills.';
     if (!payload.project_description) return 'Please tell us about a project you are proud of.';
-    if (!payload.portfolio_url || !validateUrl(payload.portfolio_url)) {
+    if (payload.portfolio_url && !validateUrl(payload.portfolio_url)) {
       return 'Please enter a valid Portfolio URL.';
     }
   }
@@ -230,11 +282,12 @@ async function submitToSupabase(payload) {
 // EVENT LISTENERS
 nextStepBtn.addEventListener('click', () => goToStep(2));
 prevStepBtn.addEventListener('click', () => goToStep(1));
-roleAppliedSelect.addEventListener('change', syncRoleView);
-
-if (whyFitInput) {
-  whyFitInput.addEventListener('input', updateCounter);
-}
+roleAppliedSelect.addEventListener('change', handleRoleSelectChange);
+roleOtherInput.addEventListener('input', () => {
+  if (roleAppliedSelect.value === 'Other') {
+    syncRoleView();
+  }
+});
 
 // FILE SELECTION LABEL UPDATE & VALIDATION
 resumeInput.addEventListener('change', () => {
@@ -312,17 +365,6 @@ form.addEventListener('submit', async (event) => {
     // Track submission rate limit timestamp
     localStorage.setItem(lastSubKey, String(now));
 
-    // =========================================================================
-    // TODO: SUPABASE DATABASE WEBHOOK + RESEND INTEGRATION
-    // =========================================================================
-    // Once the Resend API key is provided:
-    // 1. Create a Supabase Edge Function (e.g. supabase/functions/resend-email/index.ts)
-    //    or an HTTP webhook triggered on INSERT to public.sales_applications.
-    // 2. Import Resend SDK and initialize with process.env.RESEND_API_KEY.
-    // 3. Send automated confirmation email to candidate (payload.email) and notify team.
-    // Do not attempt to configure Resend or webhooks in this pass.
-    // =========================================================================
-
     form.classList.add('hidden');
     form.style.display = 'none';
     successState.classList.remove('hidden');
@@ -335,6 +377,7 @@ form.addEventListener('submit', async (event) => {
 // RESET FORM / BACK TO HOME BUTTON
 resetButton.addEventListener('click', () => {
   form.reset();
+  handleRoleSelectChange();
   goToStep(1);
   fileLabelText.textContent = 'Choose PDF file or drag here';
   fileLabelText.style.color = '';
@@ -342,7 +385,7 @@ resetButton.addEventListener('click', () => {
   form.style.display = 'block';
   successState.classList.add('hidden');
   clearBanner();
-  updateCounter();
 });
 
-updateCounter();
+// Initial setup
+handleRoleSelectChange();

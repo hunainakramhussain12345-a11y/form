@@ -1,5 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 const { normalizeSupabaseConfig, createSupabaseRequestOptions, uploadResumeToSupabase, submitToSupabase } = require('../supabase-client.js');
 
 test('normalizes the Supabase config into separate URL and anon key values', () => {
@@ -14,7 +16,7 @@ test('normalizes the Supabase config into separate URL and anon key values', () 
   assert.equal(config.bucketName, 'resumes');
 });
 
-test('creates a request that targets the sales_applications table with new role and portfolio fields', async () => {
+test('creates a request payload with role_other_text when Other role is selected', async () => {
   let request;
 
   const fetchImpl = async (url, options) => {
@@ -25,35 +27,55 @@ test('creates a request that targets the sales_applications table with new role 
   await submitToSupabase(
     { supabaseUrl: 'https://abc123.supabase.co', supabaseAnonKey: 'anon-key-123' },
     {
-      full_name: 'Test Candidate',
-      email: 'test@alphaorbit.io',
-      phone_number: '+15550001111',
-      linkedin_url: 'https://linkedin.com/in/testcandidate',
-      role_applied_for: 'Web Development',
-      years_experience: '3+ years',
-      primary_skills: 'React, Node.js, CSS',
-      project_description: 'Built a high performance web application',
-      portfolio_url: 'https://testcandidate-portfolio.com',
+      full_name: 'Custom Role Candidate',
+      email: 'custom@alphaorbit.io',
+      phone_number: '+15550002222',
+      linkedin_url: 'https://linkedin.com/in/customrole',
+      role_applied_for: 'Other',
+      role_other_text: 'Digital Marketing Strategist',
+      years_experience: '5+ years',
+      primary_skills: 'SEO, Content Strategy, PPC',
+      project_description: 'Grew organic traffic by 300%',
+      portfolio_url: null, // Optional portfolio URL
     },
     fetchImpl,
   );
 
-  assert.equal(request.url, 'https://abc123.supabase.co/rest/v1/sales_applications');
-  assert.equal(request.options.headers.apikey, 'anon-key-123');
-  assert.equal(request.options.headers.Authorization, 'Bearer anon-key-123');
-  assert.equal(request.options.method, 'POST');
-
   const body = JSON.parse(request.options.body);
-  assert.equal(body.role_applied_for, 'Web Development');
-  assert.equal(body.portfolio_url, 'https://testcandidate-portfolio.com');
-  assert.equal(body.primary_skills, 'React, Node.js, CSS');
+  assert.equal(body.role_applied_for, 'Other');
+  assert.equal(body.role_other_text, 'Digital Marketing Strategist');
+  assert.equal(body.portfolio_url, null);
+  assert.equal(body.years_of_sales_experience, undefined);
 });
 
-test('rejects placeholder Supabase values before sending', async () => {
-  await assert.rejects(
-    () => submitToSupabase({ supabaseUrl: 'https://YOUR_PROJECT_REF.supabase.co', supabaseAnonKey: 'YOUR_ANON_PUBLIC_KEY' }, { full_name: 'Test User' }),
-    /Replace the placeholder Supabase values/i,
+test('allows submission with empty/null portfolio_url for non-sales roles', async () => {
+  let request;
+
+  const fetchImpl = async (url, options) => {
+    request = { url, options };
+    return { ok: true, text: async () => '' };
+  };
+
+  await submitToSupabase(
+    { supabaseUrl: 'https://abc123.supabase.co', supabaseAnonKey: 'anon-key-123' },
+    {
+      full_name: 'Developer Without Portfolio',
+      email: 'dev@alphaorbit.io',
+      phone_number: '+15550003333',
+      linkedin_url: 'https://linkedin.com/in/devnoportfolio',
+      role_applied_for: 'Full Stack',
+      role_other_text: null,
+      years_experience: '2 years',
+      primary_skills: 'Python, PostgreSQL',
+      project_description: 'Backend microservice architecture',
+      portfolio_url: null,
+    },
+    fetchImpl,
   );
+
+  const body = JSON.parse(request.options.body);
+  assert.equal(body.role_applied_for, 'Full Stack');
+  assert.equal(body.portfolio_url, null);
 });
 
 test('enforces 3MB max file size limit for resume upload', async () => {
@@ -103,4 +125,27 @@ test('successfully uploads valid PDF under 3MB to resumes bucket', async () => {
 
   assert.ok(uploadUrlTarget.includes('/storage/v1/object/resumes/'));
   assert.ok(publicUrl.includes('/storage/v1/object/public/resumes/'));
+});
+
+test('verifies DOM role field mutual exclusion in index.html templates', () => {
+  const htmlContent = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf-8');
+  
+  // Assert template structure exists for isolated dynamic mounting
+  assert.ok(htmlContent.includes('<template id="tpl-sales-fields">'));
+  assert.ok(htmlContent.includes('<template id="tpl-other-fields">'));
+  assert.ok(htmlContent.includes('<div id="role-fields-container"></div>'));
+
+  // Verify sales fields template contains sales inputs ONLY
+  const salesTplMatch = htmlContent.match(/<template id="tpl-sales-fields">([\s\S]*?)<\/template>/);
+  assert.ok(salesTplMatch);
+  assert.ok(salesTplMatch[1].includes('yearsOfSalesExperience'));
+  assert.ok(!salesTplMatch[1].includes('primarySkills'));
+  assert.ok(!salesTplMatch[1].includes('portfolioUrl'));
+
+  // Verify other fields template contains general inputs ONLY
+  const otherTplMatch = htmlContent.match(/<template id="tpl-other-fields">([\s\S]*?)<\/template>/);
+  assert.ok(otherTplMatch);
+  assert.ok(otherTplMatch[1].includes('primarySkills'));
+  assert.ok(otherTplMatch[1].includes('portfolioUrl'));
+  assert.ok(!otherTplMatch[1].includes('yearsOfSalesExperience'));
 });

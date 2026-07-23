@@ -19,33 +19,7 @@
           
           <div class="brand-header">
             <div class="brand-logo">
-              <svg width="42" height="42" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="logo-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#00D2FF" />
-                    <stop offset="100%" stop-color="#3A7BD5" />
-                  </linearGradient>
-                  <linearGradient id="logo-grad-2" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#FF512F" />
-                    <stop offset="100%" stop-color="#F09819" />
-                  </linearGradient>
-                  <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feGaussianBlur stdDeviation="4" result="blur" />
-                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                  </filter>
-                </defs>
-                <!-- Outer Orbital Ring -->
-                <ellipse cx="50" cy="50" rx="42" ry="18" stroke="url(#logo-grad-1)" stroke-width="3" transform="rotate(-30 50 50)" opacity="0.85" />
-                <circle cx="82" cy="32" r="4" fill="#00D2FF" filter="url(#glow)" />
-                <!-- Stylized Alpha 'A' -->
-                <path d="M 50 12 L 20 82 L 34 82 L 44 58 L 68 58 L 50 12 Z" fill="url(#logo-grad-1)" />
-                <path d="M 50 12 L 80 82 L 66 82 L 56 58 L 68 58 L 50 12 Z" fill="url(#logo-grad-2)" />
-                <path d="M 38 68 L 74 68 L 62 82 L 26 82 Z" fill="url(#logo-grad-2)" />
-              </svg>
-              <div class="logo-text-group">
-                <span class="logo-title">ALPHA</span>
-                <span class="logo-subtitle">ORBIT</span>
-              </div>
+              <img src="./logo.png" alt="Alpha Orbit Digital Agency" class="brand-logo-img" />
             </div>
           </div>
 
@@ -131,7 +105,7 @@
 
           <!-- FORM CONTAINER -->
           <form id="application-form" novalidate>
-            <!-- Hidden Spam Honeypot Field (invisible via CSS) -->
+            <!-- Hidden Spam Honeypot Field -->
             <input type="text" name="website_hp" id="website_hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none !important; position:absolute; left:-9999px; opacity:0;" />
 
             <!-- STEP 1: PERSONAL INFORMATION -->
@@ -206,12 +180,27 @@
                     <option value="Video Editing">Video Editing</option>
                     <option value="WordPress">WordPress</option>
                     <option value="Marketing">Marketing</option>
+                    <option value="Other">Other</option>
                   </select>
                   <span class="select-chevron">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                   </span>
+                </div>
+              </div>
+
+              <!-- CONDITIONAL FIELD: OTHER ROLE SPECIFICATION -->
+              <div id="other-role-input-group" class="field-group hidden">
+                <label for="role_other">Specify Role Name <span class="required-tag">*</span></label>
+                <div class="input-wrapper">
+                  <span class="input-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </span>
+                  <input id="role_other" name="role_other" type="text" maxlength="100" placeholder="Please specify your role (e.g. Digital Marketing)" />
                 </div>
               </div>
 
@@ -238,109 +227,8 @@
                 <span class="pill-title" id="role-pill-title">Web Development</span>
               </div>
 
-              <!-- DYNAMIC GROUP: SALES & BUSINESS DEVELOPMENT -->
-              <div id="sales-role-fields" class="role-specific-block">
-                <div class="field-group">
-                  <label for="yearsOfSalesExperience">Years of Sales Experience</label>
-                  <div class="input-wrapper select-wrapper">
-                    <select id="yearsOfSalesExperience" name="yearsOfSalesExperience">
-                      <option value="">Select sales experience</option>
-                      <option value="0-1">0-1 years</option>
-                      <option value="1-3">1-3 years</option>
-                      <option value="3-5">3-5 years</option>
-                      <option value="5+">5+ years</option>
-                    </select>
-                    <span class="select-chevron">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-
-                <div class="field-group">
-                  <label for="relevantExperience">Experience Type</label>
-                  <div class="input-wrapper select-wrapper">
-                    <select id="relevantExperience" name="relevantExperience">
-                      <option value="">Select experience type</option>
-                      <option value="Agency">Agency</option>
-                      <option value="Startup">Startup</option>
-                      <option value="B2B Sales">B2B Sales</option>
-                      <option value="Multi-context">Multi-context</option>
-                    </select>
-                    <span class="select-chevron">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-
-                <div class="field-group">
-                  <label for="whyFit">Why are you a good fit for Alpha Orbit?</label>
-                  <textarea id="whyFit" name="whyFit" rows="4" maxlength="500" placeholder="Tell us about your sales strategy and why you're a great fit..."></textarea>
-                  <p class="hint" id="whyFitCounter">0 / 500</p>
-                </div>
-
-                <div class="field-group">
-                  <label for="compensation">Expected Compensation Structure</label>
-                  <div class="input-wrapper">
-                    <input id="compensation" name="compensation" type="text" maxlength="150" placeholder="e.g. Base + Commission structure" />
-                  </div>
-                </div>
-
-                <div class="field-group">
-                  <label for="availability">Availability</label>
-                  <div class="input-wrapper select-wrapper">
-                    <select id="availability" name="availability">
-                      <option value="">Select availability</option>
-                      <option value="Immediate">Immediate</option>
-                      <option value="2 weeks">2 weeks</option>
-                      <option value="1 month+">1 month+</option>
-                    </select>
-                    <span class="select-chevron">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- DYNAMIC GROUP: OTHER ROLES -->
-              <div id="other-role-fields" class="role-specific-block hidden">
-                <div class="field-group">
-                  <label for="yearsExperience">Years of Experience</label>
-                  <div class="input-wrapper">
-                    <input id="yearsExperience" name="yearsExperience" type="text" placeholder="e.g. 2+ years" />
-                  </div>
-                </div>
-
-                <div class="field-group">
-                  <label for="primarySkills">Primary Skills</label>
-                  <div class="input-wrapper">
-                    <input id="primarySkills" name="primarySkills" type="text" placeholder="e.g. React, Next.js, Tailwind CSS (comma separated)" />
-                  </div>
-                </div>
-
-                <div class="field-group">
-                  <label for="projectDescription">Tell us about a project you're proud of</label>
-                  <textarea id="projectDescription" name="projectDescription" rows="4" maxlength="1000" placeholder="Briefly describe the project, your role, and impact."></textarea>
-                </div>
-
-                <div class="field-group">
-                  <label for="portfolioUrl">Portfolio URL <span class="required-tag">(Required)</span></label>
-                  <div class="input-wrapper">
-                    <span class="input-icon">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-                      </svg>
-                    </span>
-                    <input id="portfolioUrl" name="portfolioUrl" type="url" placeholder="https://your-portfolio.com" />
-                  </div>
-                </div>
-              </div>
+              <!-- DYNAMIC ROLE FIELD CONTAINER (Only ONE group is mounted into DOM at any time) -->
+              <div id="role-fields-container"></div>
 
               <!-- RESUME / CV UPLOAD -->
               <div class="field-group">
@@ -388,6 +276,113 @@
             </div>
           </form>
 
+          <!-- HTML TEMPLATES FOR ROLE SPECIFIC FIELDS (Unmounted until selected) -->
+          <template id="tpl-sales-fields">
+            <div id="sales-role-fields" class="role-specific-block">
+              <div class="field-group">
+                <label for="yearsOfSalesExperience">Years of Sales Experience</label>
+                <div class="input-wrapper select-wrapper">
+                  <select id="yearsOfSalesExperience" name="yearsOfSalesExperience">
+                    <option value="">Select sales experience</option>
+                    <option value="0-1">0-1 years</option>
+                    <option value="1-3">1-3 years</option>
+                    <option value="3-5">3-5 years</option>
+                    <option value="5+">5+ years</option>
+                  </select>
+                  <span class="select-chevron">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </span>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label for="relevantExperience">Experience Type</label>
+                <div class="input-wrapper select-wrapper">
+                  <select id="relevantExperience" name="relevantExperience">
+                    <option value="">Select experience type</option>
+                    <option value="Agency">Agency</option>
+                    <option value="Startup">Startup</option>
+                    <option value="B2B Sales">B2B Sales</option>
+                    <option value="Multi-context">Multi-context</option>
+                  </select>
+                  <span class="select-chevron">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </span>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label for="whyFit">Why are you a good fit for Alpha Orbit?</label>
+                <textarea id="whyFit" name="whyFit" rows="4" maxlength="500" placeholder="Tell us about your sales strategy and why you're a great fit..."></textarea>
+                <p class="hint" id="whyFitCounter">0 / 500</p>
+              </div>
+
+              <div class="field-group">
+                <label for="compensation">Expected Compensation Structure</label>
+                <div class="input-wrapper">
+                  <input id="compensation" name="compensation" type="text" maxlength="150" placeholder="e.g. Base + Commission structure" />
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label for="availability">Availability</label>
+                <div class="input-wrapper select-wrapper">
+                  <select id="availability" name="availability">
+                    <option value="">Select availability</option>
+                    <option value="Immediate">Immediate</option>
+                    <option value="2 weeks">2 weeks</option>
+                    <option value="1 month+">1 month+</option>
+                  </select>
+                  <span class="select-chevron">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </template>
+
+          <template id="tpl-other-fields">
+            <div id="other-role-fields" class="role-specific-block">
+              <div class="field-group">
+                <label for="yearsExperience">Years of Experience</label>
+                <div class="input-wrapper">
+                  <input id="yearsExperience" name="yearsExperience" type="text" placeholder="e.g. 2+ years" />
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label for="primarySkills">Primary Skills</label>
+                <div class="input-wrapper">
+                  <input id="primarySkills" name="primarySkills" type="text" placeholder="e.g. React, Next.js, Tailwind CSS (comma separated)" />
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label for="projectDescription">Tell us about a project you're proud of</label>
+                <textarea id="projectDescription" name="projectDescription" rows="4" maxlength="1000" placeholder="Briefly describe the project, your role, and impact."></textarea>
+              </div>
+
+              <div class="field-group">
+                <label for="portfolioUrl">Portfolio URL <span class="optional-tag">(Optional)</span></label>
+                <div class="input-wrapper">
+                  <span class="input-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                    </svg>
+                  </span>
+                  <input id="portfolioUrl" name="portfolioUrl" type="url" placeholder="https://your-portfolio.com (optional)" />
+                </div>
+              </div>
+            </div>
+          </template>
+
           <!-- SUCCESS STATE SECTION -->
           <section id="success-state" class="success-state hidden" aria-live="polite">
             <div class="success-glow-wrapper">
@@ -399,12 +394,7 @@
                 </div>
               </div>
               <div class="success-brand-logo">
-                <svg width="56" height="56" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <ellipse cx="50" cy="50" rx="42" ry="18" stroke="url(#logo-grad-1)" stroke-width="3" transform="rotate(-30 50 50)" opacity="0.85" />
-                  <circle cx="82" cy="32" r="4" fill="#00D2FF" />
-                  <path d="M 50 12 L 20 82 L 34 82 L 44 58 L 68 58 L 50 12 Z" fill="url(#logo-grad-1)" />
-                  <path d="M 50 12 L 80 82 L 66 82 L 56 58 L 68 58 L 50 12 Z" fill="url(#logo-grad-2)" />
-                </svg>
+                <img src="./logo.png" alt="Alpha Orbit Digital Agency" style="max-width: 80px; height: auto;" />
               </div>
             </div>
 
