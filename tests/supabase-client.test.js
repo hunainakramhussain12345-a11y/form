@@ -16,7 +16,7 @@ test('normalizes the Supabase config into separate URL and anon key values', () 
   assert.equal(config.bucketName, 'resumes');
 });
 
-test('creates a request payload with role_other_text when Other role is selected', async () => {
+test('creates a request payload with role_other_text and privacy_accepted = true', async () => {
   let request;
 
   const fetchImpl = async (url, options) => {
@@ -33,6 +33,7 @@ test('creates a request payload with role_other_text when Other role is selected
       linkedin_url: 'https://linkedin.com/in/customrole',
       role_applied_for: 'Other',
       role_other_text: 'Digital Marketing Strategist',
+      privacy_accepted: true,
       years_experience: '5+ years',
       primary_skills: 'SEO, Content Strategy, PPC',
       project_description: 'Grew organic traffic by 300%',
@@ -44,11 +45,12 @@ test('creates a request payload with role_other_text when Other role is selected
   const body = JSON.parse(request.options.body);
   assert.equal(body.role_applied_for, 'Other');
   assert.equal(body.role_other_text, 'Digital Marketing Strategist');
+  assert.equal(body.privacy_accepted, true);
   assert.equal(body.portfolio_url, null);
   assert.equal(body.years_of_sales_experience, undefined);
 });
 
-test('allows submission with empty/null portfolio_url for non-sales roles', async () => {
+test('allows submission with empty/null portfolio_url for non-sales roles when privacy is accepted', async () => {
   let request;
 
   const fetchImpl = async (url, options) => {
@@ -65,6 +67,7 @@ test('allows submission with empty/null portfolio_url for non-sales roles', asyn
       linkedin_url: 'https://linkedin.com/in/devnoportfolio',
       role_applied_for: 'Full Stack',
       role_other_text: null,
+      privacy_accepted: true,
       years_experience: '2 years',
       primary_skills: 'Python, PostgreSQL',
       project_description: 'Backend microservice architecture',
@@ -75,6 +78,7 @@ test('allows submission with empty/null portfolio_url for non-sales roles', asyn
 
   const body = JSON.parse(request.options.body);
   assert.equal(body.role_applied_for, 'Full Stack');
+  assert.equal(body.privacy_accepted, true);
   assert.equal(body.portfolio_url, null);
 });
 
@@ -127,13 +131,19 @@ test('successfully uploads valid PDF under 3MB to resumes bucket', async () => {
   assert.ok(publicUrl.includes('/storage/v1/object/public/resumes/'));
 });
 
-test('verifies DOM role field mutual exclusion in index.html templates', () => {
+test('verifies DOM role field mutual exclusion and Privacy Policy elements in index.html', () => {
   const htmlContent = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf-8');
   
   // Assert template structure exists for isolated dynamic mounting
   assert.ok(htmlContent.includes('<template id="tpl-sales-fields">'));
   assert.ok(htmlContent.includes('<template id="tpl-other-fields">'));
   assert.ok(htmlContent.includes('<div id="role-fields-container"></div>'));
+
+  // Assert Privacy Policy checkbox and disabled submit button state exist
+  assert.ok(htmlContent.includes('id="privacyAccepted"'));
+  assert.ok(htmlContent.includes('class="privacy-link"'));
+  assert.ok(htmlContent.includes('I accept the'));
+  assert.ok(htmlContent.includes('id="submit-btn" class="btn btn-submit" disabled'));
 
   // Verify sales fields template contains sales inputs ONLY
   const salesTplMatch = htmlContent.match(/<template id="tpl-sales-fields">([\s\S]*?)<\/template>/);

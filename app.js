@@ -11,6 +11,7 @@ const step1Group = document.getElementById('step-1-group');
 const step2Group = document.getElementById('step-2-group');
 const nextStepBtn = document.getElementById('next-step-btn');
 const prevStepBtn = document.getElementById('prev-step-btn');
+const submitBtn = document.getElementById('submit-btn');
 
 // Role elements
 const roleAppliedSelect = document.getElementById('roleApplied');
@@ -23,6 +24,9 @@ const roleFieldsContainer = document.getElementById('role-fields-container');
 // Resume elements
 const resumeInput = document.getElementById('resume');
 const fileLabelText = document.getElementById('file-label-text');
+
+// Privacy elements
+const privacyCheckbox = document.getElementById('privacyAccepted');
 
 let currentStep = 1;
 
@@ -46,6 +50,18 @@ function updateCounter() {
   const whyFitCounter = document.getElementById('whyFitCounter');
   if (whyFitInput && whyFitCounter) {
     whyFitCounter.textContent = `${whyFitInput.value.length} / 500`;
+  }
+}
+
+function updateSubmitButtonState() {
+  if (privacyCheckbox && submitBtn) {
+    if (privacyCheckbox.checked) {
+      submitBtn.removeAttribute('disabled');
+      submitBtn.disabled = false;
+    } else {
+      submitBtn.setAttribute('disabled', 'disabled');
+      submitBtn.disabled = true;
+    }
   }
 }
 
@@ -179,6 +195,7 @@ function goToStep(step) {
     stepNode2.classList.add('active');
     stepLineFill.classList.add('step-2-active');
     syncRoleView();
+    updateSubmitButtonState();
   } else {
     currentStep = 1;
     step2Group.classList.add('hidden');
@@ -194,6 +211,7 @@ function collectFormData() {
   const selectedRole = String(formData.get('roleApplied') || '').trim();
   const roleOtherText = selectedRole === 'Other' ? String(formData.get('role_other') || '').trim() : null;
   const resumeFile = resumeInput.files[0];
+  const isPrivacyAccepted = Boolean(privacyCheckbox && privacyCheckbox.checked);
 
   const basePayload = {
     full_name: String(formData.get('fullName') || '').trim(),
@@ -202,6 +220,7 @@ function collectFormData() {
     linkedin_url: String(formData.get('linkedinUrl') || '').trim(),
     role_applied_for: selectedRole,
     role_other_text: roleOtherText,
+    privacy_accepted: isPrivacyAccepted,
     resume_file_name: resumeFile ? resumeFile.name : null,
   };
 
@@ -238,6 +257,10 @@ function collectFormData() {
 function validateFullForm(payload) {
   const step1Error = validateStep1();
   if (step1Error) return step1Error;
+
+  if (!payload.privacy_accepted) {
+    return 'You must accept the Privacy Policy to submit your application.';
+  }
 
   const selectedRole = payload.role_applied_for;
 
@@ -288,6 +311,10 @@ roleOtherInput.addEventListener('input', () => {
     syncRoleView();
   }
 });
+
+if (privacyCheckbox) {
+  privacyCheckbox.addEventListener('change', updateSubmitButtonState);
+}
 
 // FILE SELECTION LABEL UPDATE & VALIDATION
 resumeInput.addEventListener('change', () => {
@@ -378,6 +405,10 @@ form.addEventListener('submit', async (event) => {
 resetButton.addEventListener('click', () => {
   form.reset();
   handleRoleSelectChange();
+  if (privacyCheckbox) {
+    privacyCheckbox.checked = false;
+  }
+  updateSubmitButtonState();
   goToStep(1);
   fileLabelText.textContent = 'Choose PDF file or drag here';
   fileLabelText.style.color = '';
@@ -389,3 +420,4 @@ resetButton.addEventListener('click', () => {
 
 // Initial setup
 handleRoleSelectChange();
+updateSubmitButtonState();
