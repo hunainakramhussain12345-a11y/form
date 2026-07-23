@@ -1,5 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-
 interface ApplicationRecord {
   full_name: string;
   email: string;
@@ -26,7 +24,7 @@ interface WebhookPayload {
   record?: ApplicationRecord;
 }
 
-serve(async (req: Request) => {
+Deno.serve(async (req: Request) => {
   // Handle CORS preflight request
   if (req.method === 'OPTIONS') {
     return new Response('ok', {
@@ -113,8 +111,8 @@ serve(async (req: Request) => {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Alpha Orbit Careers <onboarding@resend.dev>',
-        to: ['hello@alphaorbit.site'],
+        from: 'Alpha Orbit Careers <notifications@career.alphaorbit.site>',
+        to: ['muhammadtahasattararain@gmail.com'],
         subject: `New Application: ${fullName} - ${displayRole}`,
         html: teamEmailHtml,
       }),
@@ -142,7 +140,7 @@ serve(async (req: Request) => {
           'Authorization': `Bearer ${RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: 'Alpha Orbit Careers <onboarding@resend.dev>',
+          from: 'Alpha Orbit Careers <notifications@career.alphaorbit.site>',
           to: [email],
           subject: `Application Received - Alpha Orbit`,
           html: candidateEmailHtml,
