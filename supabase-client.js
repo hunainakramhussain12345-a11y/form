@@ -69,7 +69,6 @@
     const headers = {
       apikey: supabaseAnonKey,
       Authorization: `Bearer ${supabaseAnonKey}`,
-      'x-upsert': 'true',
       'Content-Type': 'application/pdf',
     };
 
