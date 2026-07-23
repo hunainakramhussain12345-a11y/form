@@ -34,10 +34,10 @@ test('creates a request payload with role_other_text and privacy_accepted = true
       role_applied_for: 'Other',
       role_other_text: 'Digital Marketing Strategist',
       privacy_accepted: true,
-      years_experience: '5+ years',
+      years_of_sales_experience: '5+ years',
       primary_skills: 'SEO, Content Strategy, PPC',
       project_description: 'Grew organic traffic by 300%',
-      portfolio_url: null, // Optional portfolio URL
+      portfolio_url: null,
     },
     fetchImpl,
   );
@@ -47,7 +47,7 @@ test('creates a request payload with role_other_text and privacy_accepted = true
   assert.equal(body.role_other_text, 'Digital Marketing Strategist');
   assert.equal(body.privacy_accepted, true);
   assert.equal(body.portfolio_url, null);
-  assert.equal(body.years_of_sales_experience, undefined);
+  assert.equal(body.years_experience, undefined);
 });
 
 test('allows submission with empty/null portfolio_url for non-sales roles when privacy is accepted', async () => {
@@ -68,7 +68,7 @@ test('allows submission with empty/null portfolio_url for non-sales roles when p
       role_applied_for: 'Full Stack',
       role_other_text: null,
       privacy_accepted: true,
-      years_experience: '2 years',
+      years_of_sales_experience: '2 years',
       primary_skills: 'Python, PostgreSQL',
       project_description: 'Backend microservice architecture',
       portfolio_url: null,

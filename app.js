@@ -205,7 +205,7 @@ function goToStep(step) {
   }
 }
 
-// COLLECT FORM PAYLOAD (Supports both legacy and new column names for maximum backend compatibility)
+// COLLECT FORM PAYLOAD (Only includes exact physical columns existing on sales_applications)
 function collectFormData() {
   const formData = new FormData(form);
   const selectedRole = String(formData.get('roleApplied') || '').trim();
@@ -213,17 +213,11 @@ function collectFormData() {
   const resumeFile = resumeInput.files[0];
   const isPrivacyAccepted = Boolean(privacyCheckbox && privacyCheckbox.checked);
 
-  const phoneVal = String(formData.get('phone') || '').trim();
-  const emailVal = String(formData.get('email') || '').trim();
-  const nameVal = String(formData.get('fullName') || '').trim();
-  const linkedinVal = String(formData.get('linkedinUrl') || '').trim();
-
   const basePayload = {
-    full_name: nameVal,
-    email: emailVal,
-    phone: phoneVal,
-    phone_number: phoneVal,
-    linkedin_url: linkedinVal,
+    full_name: String(formData.get('fullName') || '').trim(),
+    email: String(formData.get('email') || '').trim(),
+    phone_number: String(formData.get('phone') || '').trim(),
+    linkedin_url: String(formData.get('linkedinUrl') || '').trim(),
     role_applied_for: selectedRole,
     role_other_text: roleOtherText,
     privacy_accepted: isPrivacyAccepted,
@@ -231,36 +225,28 @@ function collectFormData() {
   };
 
   if (selectedRole === 'Sales & Business Development') {
-    const salesExp = String(formData.get('yearsOfSalesExperience') || '').trim();
-    const relExp = String(formData.get('relevantExperience') || '').trim();
-    const fitVal = String(formData.get('whyFit') || '').trim();
-    const compVal = String(formData.get('compensation') || '').trim();
-    const availVal = String(formData.get('availability') || '').trim();
-
     return {
       ...basePayload,
-      years_of_sales_experience: salesExp,
-      years_experience: salesExp,
-      relevant_experience: relExp,
-      experience_type: relExp,
-      why_fit: fitVal,
-      expected_compensation: compVal,
-      expected_comp: compVal,
-      availability: availVal,
+      years_of_sales_experience: String(formData.get('yearsOfSalesExperience') || '').trim(),
+      relevant_experience: String(formData.get('relevantExperience') || '').trim(),
+      why_fit: String(formData.get('whyFit') || '').trim(),
+      expected_compensation: String(formData.get('compensation') || '').trim(),
+      availability: String(formData.get('availability') || '').trim(),
+      primary_skills: null,
+      project_description: null,
+      portfolio_url: null,
     };
   } else {
-    const yearsExp = String(formData.get('yearsExperience') || '').trim();
-    const skillsVal = String(formData.get('primarySkills') || '').trim();
-    const projectVal = String(formData.get('projectDescription') || '').trim();
-    const portUrl = String(formData.get('portfolioUrl') || '').trim() || null;
-
     return {
       ...basePayload,
-      years_experience: yearsExp,
-      years_of_sales_experience: yearsExp,
-      primary_skills: skillsVal,
-      project_description: projectVal,
-      portfolio_url: portUrl,
+      years_of_sales_experience: String(formData.get('yearsExperience') || '').trim(),
+      primary_skills: String(formData.get('primarySkills') || '').trim(),
+      project_description: String(formData.get('projectDescription') || '').trim(),
+      portfolio_url: String(formData.get('portfolioUrl') || '').trim() || null,
+      relevant_experience: null,
+      why_fit: null,
+      expected_compensation: null,
+      availability: null,
     };
   }
 }
@@ -283,7 +269,7 @@ function validateFullForm(payload) {
     if (payload.why_fit.length > 500) return 'Your fit statement must be 500 characters or fewer.';
     if (!payload.availability) return 'Please select your availability.';
   } else {
-    if (!payload.years_experience) return 'Please provide your years of experience.';
+    if (!payload.years_of_sales_experience) return 'Please provide your years of experience.';
     if (!payload.primary_skills) return 'Please enter your primary skills.';
     if (!payload.project_description) return 'Please tell us about a project you are proud of.';
     if (payload.portfolio_url && !validateUrl(payload.portfolio_url)) {
