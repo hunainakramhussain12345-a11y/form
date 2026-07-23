@@ -205,7 +205,7 @@ function goToStep(step) {
   }
 }
 
-// COLLECT FORM PAYLOAD
+// COLLECT FORM PAYLOAD (Supports both legacy and new column names for maximum backend compatibility)
 function collectFormData() {
   const formData = new FormData(form);
   const selectedRole = String(formData.get('roleApplied') || '').trim();
@@ -213,11 +213,17 @@ function collectFormData() {
   const resumeFile = resumeInput.files[0];
   const isPrivacyAccepted = Boolean(privacyCheckbox && privacyCheckbox.checked);
 
+  const phoneVal = String(formData.get('phone') || '').trim();
+  const emailVal = String(formData.get('email') || '').trim();
+  const nameVal = String(formData.get('fullName') || '').trim();
+  const linkedinVal = String(formData.get('linkedinUrl') || '').trim();
+
   const basePayload = {
-    full_name: String(formData.get('fullName') || '').trim(),
-    email: String(formData.get('email') || '').trim(),
-    phone_number: String(formData.get('phone') || '').trim(),
-    linkedin_url: String(formData.get('linkedinUrl') || '').trim(),
+    full_name: nameVal,
+    email: emailVal,
+    phone: phoneVal,
+    phone_number: phoneVal,
+    linkedin_url: linkedinVal,
     role_applied_for: selectedRole,
     role_other_text: roleOtherText,
     privacy_accepted: isPrivacyAccepted,
@@ -225,30 +231,36 @@ function collectFormData() {
   };
 
   if (selectedRole === 'Sales & Business Development') {
+    const salesExp = String(formData.get('yearsOfSalesExperience') || '').trim();
+    const relExp = String(formData.get('relevantExperience') || '').trim();
+    const fitVal = String(formData.get('whyFit') || '').trim();
+    const compVal = String(formData.get('compensation') || '').trim();
+    const availVal = String(formData.get('availability') || '').trim();
+
     return {
       ...basePayload,
-      years_of_sales_experience: String(formData.get('yearsOfSalesExperience') || '').trim(),
-      relevant_experience: String(formData.get('relevantExperience') || '').trim(),
-      why_fit: String(formData.get('whyFit') || '').trim(),
-      expected_compensation: String(formData.get('compensation') || '').trim(),
-      availability: String(formData.get('availability') || '').trim(),
-      years_experience: null,
-      primary_skills: null,
-      project_description: null,
-      portfolio_url: null,
+      years_of_sales_experience: salesExp,
+      years_experience: salesExp,
+      relevant_experience: relExp,
+      experience_type: relExp,
+      why_fit: fitVal,
+      expected_compensation: compVal,
+      expected_comp: compVal,
+      availability: availVal,
     };
   } else {
+    const yearsExp = String(formData.get('yearsExperience') || '').trim();
+    const skillsVal = String(formData.get('primarySkills') || '').trim();
+    const projectVal = String(formData.get('projectDescription') || '').trim();
+    const portUrl = String(formData.get('portfolioUrl') || '').trim() || null;
+
     return {
       ...basePayload,
-      years_experience: String(formData.get('yearsExperience') || '').trim(),
-      primary_skills: String(formData.get('primarySkills') || '').trim(),
-      project_description: String(formData.get('projectDescription') || '').trim(),
-      portfolio_url: String(formData.get('portfolioUrl') || '').trim() || null,
-      years_of_sales_experience: null,
-      relevant_experience: null,
-      why_fit: null,
-      expected_compensation: null,
-      availability: null,
+      years_experience: yearsExp,
+      years_of_sales_experience: yearsExp,
+      primary_skills: skillsVal,
+      project_description: projectVal,
+      portfolio_url: portUrl,
     };
   }
 }
@@ -336,7 +348,7 @@ resumeInput.addEventListener('change', () => {
     clearBanner();
     const sizeMb = (file.size / (1024 * 1024)).toFixed(2);
     fileLabelText.textContent = `Attached: ${file.name} (${sizeMb} MB)`;
-    fileLabelText.style.color = '#7DD3FC';
+    fileLabelText.style.color = '#FBBF24';
   } else {
     fileLabelText.textContent = 'Choose PDF file or drag here';
     fileLabelText.style.color = '';
@@ -348,10 +360,9 @@ form.addEventListener('submit', async (event) => {
   event.preventDefault();
   clearBanner();
 
-  // SPAM PROTECTION 1: Honeypot Check (invisible field filled by bots)
+  // SPAM PROTECTION 1: Honeypot Check
   const honeypotField = document.getElementById('website_hp');
   if (honeypotField && honeypotField.value) {
-    // Silently reject submission, pretend success to bot
     console.warn('Bot submission detected via honeypot.');
     form.classList.add('hidden');
     form.style.display = 'none';
@@ -389,7 +400,6 @@ form.addEventListener('submit', async (event) => {
     showBanner('Submitting application...', 'info');
     await submitToSupabase(payload);
 
-    // Track submission rate limit timestamp
     localStorage.setItem(lastSubKey, String(now));
 
     form.classList.add('hidden');

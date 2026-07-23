@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Alpha Orbit | Careers Application</title>
-    <meta name="description" content="Apply to join the Alpha Orbit team. Help businesses grow digitally with solutions in SEO, Web Development, SaaS, Design, and Marketing." />
+    <meta name="description" content="Apply to join the Alpha Orbit team. We design, build, and scale powerful software, AI systems, and digital platforms." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -21,14 +21,19 @@
             <div class="brand-logo">
               <img src="./logo.png" alt="Alpha Orbit Digital Agency" class="brand-logo-img" />
             </div>
+            <div class="future-badge">
+              <span class="badge-dot"></span>
+              <span>Building the Future</span>
+            </div>
           </div>
 
           <div class="brand-content">
             <h1 class="brand-headline">
-              Join <span class="gradient-cyan">Alpha Orbit</span>
+              Building End To End <br />
+              <span class="gradient-gold">Tech Solution</span>
             </h1>
             <p class="brand-pitch">
-              We help businesses grow digitally with powerful solutions in SEO, Web Development, SaaS, Design &amp; Marketing.
+              We design, build, and scale powerful software, AI systems, and digital platforms.
             </p>
 
             <div class="value-points">
@@ -42,23 +47,21 @@
                   </svg>
                 </div>
                 <div class="value-text">
-                  <h3>Work on innovative projects</h3>
-                  <p>Build impactful solutions that solve real-world problems.</p>
+                  <h3>Custom Software Development</h3>
+                  <p>End-to-end web, mobile, and SaaS solutions built for performance and scale.</p>
                 </div>
               </div>
 
               <div class="value-card">
                 <div class="icon-box">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
                   </svg>
                 </div>
                 <div class="value-text">
-                  <h3>Collaborate with talented people</h3>
-                  <p>Join a passionate team that values creativity and growth.</p>
+                  <h3>AI &amp; Automation</h3>
+                  <p>Intelligent systems and automation that streamline operations and drive growth.</p>
                 </div>
               </div>
 
@@ -70,9 +73,29 @@
                   </svg>
                 </div>
                 <div class="value-text">
-                  <h3>Grow your career with us</h3>
-                  <p>Continuous learning, mentorship and opportunities to level up.</p>
+                  <h3>Digital Growth &amp; Marketing</h3>
+                  <p>SEO, performance marketing, and content strategies that deliver measurable results.</p>
                 </div>
+              </div>
+            </div>
+
+            <!-- STATS GRID BAR -->
+            <div class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-number">150+</span>
+                <span class="stat-label">Projects Delivered Worldwide</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">50+</span>
+                <span class="stat-label">Global Clients &amp; Partners</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">99%</span>
+                <span class="stat-label">Client Satisfaction Rate</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">4+</span>
+                <span class="stat-label">Years of Experience in Tech Solutions</span>
               </div>
             </div>
           </div>
@@ -111,7 +134,7 @@
             <!-- STEP 1: PERSONAL INFORMATION -->
             <div id="step-1-group" class="step-group">
               <div class="step-heading">
-                <span class="step-badge badge-blue">Step 1</span>
+                <span class="step-badge badge-amber">Step 1</span>
                 <h3>Personal Information</h3>
               </div>
 
@@ -218,13 +241,13 @@
             <!-- STEP 2: ROLE SPECIFIC INFORMATION -->
             <div id="step-2-group" class="step-group hidden">
               <div class="step-heading">
-                <span class="step-badge badge-orange">Step 2</span>
+                <span class="step-badge badge-amber">Step 2</span>
                 <h3>Role Specific Information</h3>
               </div>
 
               <div class="selected-role-pill" id="selected-role-pill">
                 <span class="pill-icon" id="role-pill-icon">&lt;/&gt;</span>
-                <span class="pill-title" id="role-pill-title">Web Development</span>
+                <span class="pill-title" id="role-pill-title">Select your role first</span>
               </div>
 
               <!-- DYNAMIC ROLE FIELD CONTAINER (Only ONE group is mounted into DOM at any time) -->
@@ -292,7 +315,7 @@
                 <label for="yearsOfSalesExperience">Years of Sales Experience</label>
                 <div class="input-wrapper select-wrapper">
                   <select id="yearsOfSalesExperience" name="yearsOfSalesExperience">
-                    <option value="">Select sales experience</option>
+                    <option value="">e.g. 2+ years</option>
                     <option value="0-1">0-1 years</option>
                     <option value="1-3">1-3 years</option>
                     <option value="3-5">3-5 years</option>
@@ -366,9 +389,9 @@
               </div>
 
               <div class="field-group">
-                <label for="primarySkills">Primary Skills</label>
+                <label for="primarySkills">Skills &amp; Technologies</label>
                 <div class="input-wrapper">
-                  <input id="primarySkills" name="primarySkills" type="text" placeholder="e.g. React, Next.js, Tailwind CSS (comma separated)" />
+                  <input id="primarySkills" name="primarySkills" type="text" placeholder="e.g. React, Node.js, Python, AWS" />
                 </div>
               </div>
 
@@ -386,7 +409,7 @@
                       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
                     </svg>
                   </span>
-                  <input id="portfolioUrl" name="portfolioUrl" type="url" placeholder="https://your-portfolio.com (optional)" />
+                  <input id="portfolioUrl" name="portfolioUrl" type="url" placeholder="https://your-portfolio.com" />
                 </div>
               </div>
             </div>
@@ -397,7 +420,7 @@
             <div class="success-glow-wrapper">
               <div class="success-icon-ring">
                 <div class="success-icon">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00D2FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
                 </div>
