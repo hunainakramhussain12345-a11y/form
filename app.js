@@ -225,11 +225,9 @@ function collectFormData() {
   };
 
   if (selectedRole === 'Sales & Business Development') {
-    const experienceVal = String(formData.get('yearsOfSalesExperience') || '').trim();
     return {
       ...basePayload,
-      years_of_sales_experience: experienceVal,
-      years_experience: experienceVal,
+      years_of_sales_experience: String(formData.get('yearsOfSalesExperience') || '').trim(),
       relevant_experience: String(formData.get('relevantExperience') || '').trim(),
       why_fit: String(formData.get('whyFit') || '').trim(),
       expected_compensation: String(formData.get('compensation') || '').trim(),
@@ -239,11 +237,9 @@ function collectFormData() {
       portfolio_url: null,
     };
   } else {
-    const experienceVal = String(formData.get('yearsExperience') || '').trim();
     return {
       ...basePayload,
-      years_of_sales_experience: experienceVal,
-      years_experience: experienceVal,
+      years_of_sales_experience: String(formData.get('yearsExperience') || '').trim(),
       primary_skills: String(formData.get('primarySkills') || '').trim(),
       project_description: String(formData.get('projectDescription') || '').trim(),
       portfolio_url: String(formData.get('portfolioUrl') || '').trim() || null,
@@ -276,11 +272,10 @@ function validateFullForm(payload) {
     if (!payload.years_of_sales_experience) return 'Please select your experience level (Beginner, Professional, or Expert).';
     if (!payload.availability) return 'Please select your availability (Part Time or Full Time).';
     if (!payload.primary_skills) return 'Please enter your primary skills.';
-    if (!payload.portfolio_url) return 'Please enter your Portfolio URL.';
+    if (!payload.project_description) return 'Please tell us about a project you are proud of.';
     if (payload.portfolio_url && !validateUrl(payload.portfolio_url)) {
       return 'Please enter a valid Portfolio URL.';
     }
-    if (!payload.project_description) return 'Please tell us about a project you are proud of.';
   }
 
   // RESUME CV FRONTEND VALIDATION (PDF only, max 5MB)
