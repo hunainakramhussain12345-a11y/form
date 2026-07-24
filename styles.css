@@ -45,8 +45,8 @@ body {
   align-items: center;
   padding: 24px 16px;
   background-image: 
-    radial-gradient(ellipse at 75% 25%, rgba(250, 204, 21, 0.12) 0%, transparent 45%),
-    radial-gradient(ellipse at 25% 75%, rgba(217, 119, 6, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 75% 25%, rgba(250, 204, 21, 0.1) 0%, transparent 45%),
+    radial-gradient(ellipse at 25% 75%, rgba(217, 119, 6, 0.06) 0%, transparent 50%),
     radial-gradient(circle at 50% 50%, #06070B 0%, #020204 100%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
@@ -79,14 +79,18 @@ body {
   }
 }
 
-/* LEFT BRAND PANEL */
+/* LEFT BRAND PANEL (Uses exact uploaded brand-bg.png image as background) */
 .brand-panel {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 32px 28px;
-  background: var(--bg-panel);
+  background-color: #030305;
+  background-image: url('./brand-bg.png');
+  background-size: cover;
+  background-position: right bottom;
+  background-repeat: no-repeat;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-subtle);
   overflow: hidden;
@@ -96,23 +100,6 @@ body {
   .brand-panel {
     padding: 36px 32px;
   }
-}
-
-/* BACKGROUND ORBITAL SWOOSH GRAPHIC */
-.orbital-swoosh {
-  position: absolute;
-  top: -40px;
-  right: -80px;
-  width: 540px;
-  height: 540px;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.9;
-}
-
-.orbital-swoosh svg {
-  width: 100%;
-  height: 100%;
 }
 
 .brand-header {
@@ -197,14 +184,16 @@ body {
   gap: 16px;
   padding: 14px;
   border-radius: var(--radius-sm);
-  background: var(--bg-card);
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: rgba(15, 16, 24, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   transition: var(--transition);
 }
 
 .value-card:hover {
-  background: #151622;
-  border-color: rgba(250, 204, 21, 0.25);
+  background: rgba(21, 22, 34, 0.92);
+  border-color: rgba(250, 204, 21, 0.3);
   transform: translateY(-2px);
 }
 
@@ -241,7 +230,7 @@ body {
   gap: 10px;
   margin-top: 24px;
   padding-top: 20px;
-  border-top: 1px solid var(--border-subtle);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 @media (min-width: 640px) {
@@ -255,8 +244,10 @@ body {
   flex-direction: column;
   gap: 4px;
   padding: 12px 10px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  background: rgba(15, 16, 24, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-sm);
 }
 
