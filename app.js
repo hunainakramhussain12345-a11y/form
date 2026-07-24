@@ -205,7 +205,7 @@ function goToStep(step) {
   }
 }
 
-// COLLECT FORM PAYLOAD (Only includes exact physical columns existing on sales_applications)
+// COLLECT FORM PAYLOAD
 function collectFormData() {
   const formData = new FormData(form);
   const selectedRole = String(formData.get('roleApplied') || '').trim();
@@ -225,9 +225,11 @@ function collectFormData() {
   };
 
   if (selectedRole === 'Sales & Business Development') {
+    const experienceVal = String(formData.get('yearsOfSalesExperience') || '').trim();
     return {
       ...basePayload,
-      years_of_sales_experience: String(formData.get('yearsOfSalesExperience') || '').trim(),
+      years_of_sales_experience: experienceVal,
+      years_experience: experienceVal,
       relevant_experience: String(formData.get('relevantExperience') || '').trim(),
       why_fit: String(formData.get('whyFit') || '').trim(),
       expected_compensation: String(formData.get('compensation') || '').trim(),
@@ -237,9 +239,11 @@ function collectFormData() {
       portfolio_url: null,
     };
   } else {
+    const experienceVal = String(formData.get('yearsExperience') || '').trim();
     return {
       ...basePayload,
-      years_of_sales_experience: String(formData.get('yearsExperience') || '').trim(),
+      years_of_sales_experience: experienceVal,
+      years_experience: experienceVal,
       primary_skills: String(formData.get('primarySkills') || '').trim(),
       project_description: String(formData.get('projectDescription') || '').trim(),
       portfolio_url: String(formData.get('portfolioUrl') || '').trim() || null,
@@ -263,19 +267,20 @@ function validateFullForm(payload) {
   const selectedRole = payload.role_applied_for;
 
   if (selectedRole === 'Sales & Business Development') {
-    if (!payload.years_of_sales_experience) return 'Please select your sales experience range.';
+    if (!payload.years_of_sales_experience) return 'Please select your experience level (Beginner, Professional, or Expert).';
+    if (!payload.availability) return 'Please select your availability (Part Time or Full Time).';
     if (!payload.relevant_experience) return 'Please select your experience type.';
-    if (!payload.why_fit) return 'Please share why you are a strong fit for Alpha Orbit.';
-    if (payload.why_fit.length > 500) return 'Your fit statement must be 500 characters or fewer.';
-    if (!payload.availability) return 'Please select your availability.';
+    if (!payload.why_fit) return 'Please tell us about a project you are proud of.';
+    if (payload.why_fit.length > 500) return 'Your response must be 500 characters or fewer.';
   } else {
-    if (!payload.years_of_sales_experience) return 'Please select your experience level.';
+    if (!payload.years_of_sales_experience) return 'Please select your experience level (Beginner, Professional, or Expert).';
+    if (!payload.availability) return 'Please select your availability (Part Time or Full Time).';
     if (!payload.primary_skills) return 'Please enter your primary skills.';
-    if (!payload.project_description) return 'Please tell us about a project you are proud of.';
-    if (!payload.availability) return 'Please select your availability.';
+    if (!payload.portfolio_url) return 'Please enter your Portfolio URL.';
     if (payload.portfolio_url && !validateUrl(payload.portfolio_url)) {
       return 'Please enter a valid Portfolio URL.';
     }
+    if (!payload.project_description) return 'Please tell us about a project you are proud of.';
   }
 
   // RESUME CV FRONTEND VALIDATION (PDF only, max 5MB)
@@ -335,7 +340,7 @@ resumeInput.addEventListener('change', () => {
     clearBanner();
     const sizeMb = (file.size / (1024 * 1024)).toFixed(2);
     fileLabelText.textContent = `Attached: ${file.name} (${sizeMb} MB)`;
-    fileLabelText.style.color = '#FBBF24';
+    fileLabelText.style.color = '#FACC15';
   } else {
     fileLabelText.textContent = 'Choose PDF file or drag here';
     fileLabelText.style.color = '';
