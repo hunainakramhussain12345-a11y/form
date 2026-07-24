@@ -386,10 +386,9 @@
                 <label for="availability">Availability</label>
                 <div class="input-wrapper select-wrapper">
                   <select id="availability" name="availability">
-                    <option value="">Select availability</option>
-                    <option value="Immediate">Immediate</option>
-                    <option value="2 weeks">2 weeks</option>
-                    <option value="1 month+">1 month+</option>
+                    <option value="" disabled selected>Select availability</option>
+                    <option value="Part Time">Part Time</option>
+                    <option value="Full Time">Full Time</option>
                   </select>
                   <span class="select-chevron">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -404,9 +403,19 @@
           <template id="tpl-other-fields">
             <div id="other-role-fields" class="role-specific-block">
               <div class="field-group">
-                <label for="yearsExperience">Years of Experience</label>
-                <div class="input-wrapper">
-                  <input id="yearsExperience" name="yearsExperience" type="text" placeholder="e.g. 2+ years" />
+                <label for="yearsExperience">Experience Level</label>
+                <div class="input-wrapper select-wrapper">
+                  <select id="yearsExperience" name="yearsExperience">
+                    <option value="" disabled selected>Select your experience level</option>
+                    <option value="Beginner">Beginner</option>
+                    <option value="Professional">Professional</option>
+                    <option value="Expert">Expert</option>
+                  </select>
+                  <span class="select-chevron">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </span>
                 </div>
               </div>
 
@@ -420,6 +429,22 @@
               <div class="field-group">
                 <label for="projectDescription">Tell us about a project you're proud of</label>
                 <textarea id="projectDescription" name="projectDescription" rows="4" maxlength="1000" placeholder="Briefly describe the project, your role, and impact."></textarea>
+              </div>
+
+              <div class="field-group">
+                <label for="availability">Availability</label>
+                <div class="input-wrapper select-wrapper">
+                  <select id="availability" name="availability">
+                    <option value="" disabled selected>Select availability</option>
+                    <option value="Part Time">Part Time</option>
+                    <option value="Full Time">Full Time</option>
+                  </select>
+                  <span class="select-chevron">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </span>
+                </div>
               </div>
 
               <div class="field-group">

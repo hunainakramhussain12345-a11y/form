@@ -243,10 +243,10 @@ function collectFormData() {
       primary_skills: String(formData.get('primarySkills') || '').trim(),
       project_description: String(formData.get('projectDescription') || '').trim(),
       portfolio_url: String(formData.get('portfolioUrl') || '').trim() || null,
+      availability: String(formData.get('availability') || '').trim(),
       relevant_experience: null,
       why_fit: null,
       expected_compensation: null,
-      availability: null,
     };
   }
 }
@@ -269,9 +269,10 @@ function validateFullForm(payload) {
     if (payload.why_fit.length > 500) return 'Your fit statement must be 500 characters or fewer.';
     if (!payload.availability) return 'Please select your availability.';
   } else {
-    if (!payload.years_of_sales_experience) return 'Please provide your years of experience.';
+    if (!payload.years_of_sales_experience) return 'Please select your experience level.';
     if (!payload.primary_skills) return 'Please enter your primary skills.';
     if (!payload.project_description) return 'Please tell us about a project you are proud of.';
+    if (!payload.availability) return 'Please select your availability.';
     if (payload.portfolio_url && !validateUrl(payload.portfolio_url)) {
       return 'Please enter a valid Portfolio URL.';
     }
