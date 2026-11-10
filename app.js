@@ -91,8 +91,13 @@ function validateUrl(value) {
 // Role Icon Resolver
 function getRoleIcon(role) {
   switch (role) {
+    case 'Sales Executive':
     case 'Sales & Business Development':
       return '💼';
+    case 'Agentic AI Expert':
+      return '🤖';
+    case 'Intern (All Niches)':
+      return '🎓';
     case 'SEO':
     case 'Marketing':
       return '📈';
@@ -139,7 +144,7 @@ function syncRoleView() {
   // Clear container completely to unmount any previous role fields
   roleFieldsContainer.innerHTML = '';
 
-  if (selectedRole === 'Sales & Business Development') {
+  if (selectedRole === 'Sales & Business Development' || selectedRole === 'Sales Executive') {
     const tpl = document.getElementById('tpl-sales-fields');
     if (tpl) {
       const clone = tpl.content.cloneNode(true);
@@ -387,6 +392,25 @@ form.addEventListener('submit', async (event) => {
     showBanner('Submitting application...', 'info');
     await submitToSupabase(payload);
 
+    // Asynchronously dispatch candidate confirmation & admin alert email
+    try {
+      const config = getSupabaseConfig();
+      fetch(`${config.supabaseUrl}/functions/v1/send-application-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${config.supabaseAnonKey}`,
+          'apikey': config.supabaseAnonKey,
+        },
+        body: JSON.stringify({
+          type: 'INSERT',
+          record: payload,
+        }),
+      }).catch((e) => console.warn('Email dispatch notification:', e));
+    } catch (e) {
+      console.warn('Email trigger skipped:', e);
+    }
+
     localStorage.setItem(lastSubKey, String(now));
 
     form.classList.add('hidden');
@@ -415,6 +439,89 @@ resetButton.addEventListener('click', () => {
   clearBanner();
 });
 
+// ACTIVELY HIRING PILLS CLICK & DYNAMIC FETCHING
+function setupHiringPills() {
+  const container = document.getElementById('hiring-cards-container');
+  if (!container) return;
+
+  container.addEventListener('click', (e) => {
+    const pill = e.target.closest('.hiring-card-pill');
+    if (!pill) return;
+    const targetRole = pill.getAttribute('data-role');
+    if (targetRole && roleAppliedSelect) {
+      // Find or add option
+      let optExists = Array.from(roleAppliedSelect.options).some((opt) => opt.value === targetRole);
+      if (!optExists) {
+        const newOpt = new Option(targetRole, targetRole, true, true);
+        roleAppliedSelect.add(newOpt, 1);
+      }
+      roleAppliedSelect.value = targetRole;
+      handleRoleSelectChange();
+
+      // Smooth scroll to form on mobile or small screens
+      const formPanel = document.querySelector('.form-panel');
+      if (formPanel) {
+        formPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      const fullNameInput = document.getElementById('fullName');
+      if (fullNameInput) {
+        setTimeout(() => fullNameInput.focus(), 400);
+      }
+    }
+  });
+}
+
+// Fetch live job postings from Supabase if table exists
+async function fetchActiveJobPostings() {
+  try {
+    const config = getSupabaseConfig();
+    if (!config.supabaseUrl || !config.supabaseAnonKey) return;
+
+    const res = await fetch(`${config.supabaseUrl}/rest/v1/job_postings?is_active=eq.true&order=created_at.desc`, {
+      headers: {
+        apikey: config.supabaseAnonKey,
+        Authorization: `Bearer ${config.supabaseAnonKey}`,
+      },
+    });
+
+    if (!res.ok) return;
+
+    const postings = await res.json();
+    if (!Array.isArray(postings) || postings.length === 0) return;
+
+    const container = document.getElementById('hiring-cards-container');
+    const activeGroup = document.getElementById('hiring-active-group');
+
+    if (container) {
+      container.innerHTML = postings
+        .map((job) => {
+          const icon = getRoleIcon(job.title);
+          return `
+          <button type="button" class="hiring-card-pill" data-role="${job.title}">
+            <span class="pill-icon">${icon}</span>
+            <div class="pill-info">
+              <span class="pill-title">${job.title}</span>
+              <span class="pill-meta">${job.job_type || 'Full-time'} • ${job.location || 'Remote'}</span>
+            </div>
+            <span class="pill-action">Apply &rarr;</span>
+          </button>
+        `;
+        })
+        .join('');
+    }
+
+    if (activeGroup) {
+      activeGroup.innerHTML = postings
+        .map((job) => `<option value="${job.title}">${job.title}</option>`)
+        .join('');
+    }
+  } catch (err) {
+    console.log('Using default active openings:', err);
+  }
+}
+
 // Initial setup
 handleRoleSelectChange();
 updateSubmitButtonState();
+setupHiringPills();
+fetchActiveJobPostings();
