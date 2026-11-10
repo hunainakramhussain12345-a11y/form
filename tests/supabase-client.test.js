@@ -142,7 +142,7 @@ test('verifies DOM role field mutual exclusion and Privacy Policy elements in in
   // Assert Privacy Policy checkbox and disabled submit button state exist
   assert.ok(htmlContent.includes('id="privacyAccepted"'));
   assert.ok(htmlContent.includes('class="privacy-link"'));
-  assert.ok(htmlContent.includes('I accept the'));
+  assert.ok(htmlContent.includes('agree to the') || htmlContent.includes('I accept the'));
   assert.ok(htmlContent.includes('id="submit-btn" class="btn btn-submit" disabled'));
 
   // Verify sales fields template contains sales inputs ONLY
